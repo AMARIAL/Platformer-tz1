@@ -1,24 +1,25 @@
-using System.Collections.Generic;
 using UnityEngine;
 public enum Sound
 {
-    crowds,
-    door,
-    jump,
+    attack,
+    death,
     hit,
-    spring,
-    teleport,
-    checkpoint,
-    gravity,
-    take,
+    jump,
+    landing,
+    skeletonDeath,
+    apple,
+    coin,
+    ouch,
+    savepoint,
+    wolfAttack,
+    wolfDeath,
     button,
-    hitpoint
 }
 public enum Music
 {
-    game = 0,
-    win = 1,
-    lose = 2
+    game,
+    win,
+    lose
 }
 public class Audio : MonoBehaviour
 {
@@ -26,19 +27,18 @@ public class Audio : MonoBehaviour
     
     public bool MusicOn = true;
     public bool SoundOn = true;
-
+    [SerializeField] private AudioSource musicAudio;
+    [SerializeField] private Transform soundAudio;
     [SerializeField] private AudioClip[] musicList;
-    
-    private Dictionary<Sound, AudioSource> sound;
-
-    private AudioSource musicAudio;
-    
+    private AudioSource[] soundList;
     private void Awake()
     {
-        ST = this;
-        sound = new Dictionary<Sound, AudioSource>();
-        musicAudio = GetComponent<AudioSource>();
-
+        if(ST)
+            Destroy(gameObject);
+        else
+            ST = this;
+        
+        soundList = soundAudio.GetComponentsInChildren<AudioSource>();
     }
     private void Start()
     {
@@ -49,9 +49,7 @@ public class Audio : MonoBehaviour
             SoundOn = false;
         
         if (!MusicOn)
-        {
             musicAudio.Stop();
-        }
     }
     
     public void SoundOnOff(bool isOn = true)
@@ -92,9 +90,7 @@ public class Audio : MonoBehaviour
     }
     public void PlaySound(Sound newSound)
     {
-        if (!SoundOn) 
-            return;
-        
-        sound[newSound].Play();
+        if (SoundOn) 
+            soundList[(int)newSound].Play();
     }
 }

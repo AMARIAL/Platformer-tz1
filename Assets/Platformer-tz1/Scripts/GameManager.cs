@@ -1,72 +1,80 @@
-using TMPro;
+using System;
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 
-public enum GameState: byte {Menu, Levels, Game, Pause, GameOver}
+public enum GameState: byte {Game, Pause}
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private int lives;
-    [SerializeField] private Vector2 savePoint;
     public static GameManager ST  {get; private set;}
+    public int lives;
     public int levelNum;
+    public int coins { get; private set; }
     public GameState currentState { get;  private set;}
-
-    private TextMeshProUGUI livesNum;
+    public event Action livesChanged;
+    public event Action coinsChanged;
+    [HideInInspector] public CheckPoint checkPoint;
+    private Vector3 startPosition;
+    
+    public Dictionary<GameObject, Health> healthContainer = new Dictionary<GameObject, Health>();
+    
     private void Awake()
     {
-        ST = this;
         if (SceneManager.GetActiveScene().name.Contains('-'))
             int.TryParse(SceneManager.GetActiveScene().name.Split('-')[1], out levelNum);
         
+        if (ST)
+            Destroy(gameObject);
+        else
+            ST = this;
     }
+    
     private void Start()
     {
-        livesNum = GameObject.Find("Lives").GetComponent<TextMeshProUGUI>();
-        livesNum.text = lives.ToString();
-        savePoint = Player.ST.transform.position;
-
-        if (levelNum == 1)
+        if (levelNum == 0)
         {
-            Menu.ST.OpenMenu();
-            ChangeState(GameState.Menu);
+            ChangeState(GameState.Pause);
+            Menu.ST.OpenMenu(false);
             Audio.ST.PlayMusic(Music.win);
         }
         else
         {
             ChangeState(GameState.Game);
+            livesChanged?.Invoke();
             Audio.ST.PlayMusic(Music.game);
+            startPosition = Player.ST.transform.position;
         }
-        
     }
+
+    public void CoinsChanged(bool reCount)
+    {
+        if(!reCount)
+            coins++;
+        coinsChanged?.Invoke();
+    }
+
     private void ChangeLives(bool flag = false)
     {
         if (flag)
             lives++;
         else if(lives > 0)
             lives--;
-        livesNum.text = lives.ToString();
+        
+        livesChanged?.Invoke();
     }
     private void DoPause(bool flag = true)
     {
-        if (flag)
-        {
-            Time.timeScale = 0;
-        }
-        else
-        {
-            Time.timeScale = 1;
-        }
-        Audio.ST.PauseMusic();
+        Time.timeScale = flag ? 0: 1;
     }
 
     public void ChangeState (GameState gameState)
     {
+        if(currentState == gameState) return;
         currentState = gameState;
-        
-        DoPause(currentState == GameState.Pause || currentState == GameState.Menu);
+        DoPause(currentState == GameState.Pause);
     }
-
+    
     public void PlayerDead ()
     {
         if(lives == 1)
@@ -83,13 +91,12 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForSeconds(1.0f);
         ChangeLives();
-        Player.ST.transform.position = savePoint;
-        //Player.ST.state = Player.State.Idle;
-        //Player.ST.Restart();
+        Player.ST.transform.position = checkPoint ? checkPoint.transform.position : startPosition;
+        Player.ST.Restart();
         yield return null;
     }
-    public void NewCheckPoint(Vector2 pos)
+    public void NewCheckPoint(CheckPoint _checkPoint)
     {
-        savePoint = pos;
+        checkPoint = _checkPoint;
     }
 }

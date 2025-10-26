@@ -3,18 +3,26 @@ using UnityEngine;
 public class Healer : MonoBehaviour
 {
     [SerializeField] private int health;
-    
-    private void Start()
+    private bool isActive = true;
+    private Animator _animator;
+
+    private void Awake()
     {
-        Containers.ST.healerContainer.Add(gameObject,this);
+        _animator = GetComponentInChildren<Animator>();
     }
-    
     private void OnTriggerEnter2D (Collider2D other)
     {
-        if (other.CompareTag("Player"))
+        if (isActive && other.CompareTag("Player"))
         {
-            Containers.ST.healthContainer[other.transform.parent.gameObject].DoHeal(health);
-            gameObject.SetActive(false);
+            GameManager.ST.healthContainer[other.transform.parent.gameObject].DoHeal(health);
+            Audio.ST.PlaySound(Sound.apple);
+            isActive = false;
+            _animator.Play("Item-destroy");
+            
         }
+    }
+    public void DoDestroy()
+    {
+        gameObject.SetActive(false);
     }
 }

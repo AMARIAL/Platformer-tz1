@@ -9,18 +9,22 @@ public class CheckPoint : MonoBehaviour
     
     private void Start()
     {
-        Containers.ST.checkPointContainer.Add(gameObject,this);
-        isActive = false;
-        pos = transform.position;
+        isActive = true;
         glow.SetActive(false);
     }
     
     private void OnTriggerEnter2D (Collider2D other)
     {
-        if (other.CompareTag("Player"))
+        if (isActive && other.CompareTag("Player"))
         {
-            GameManager.ST.NewCheckPoint(pos);
-            isActive = true;
+            if (GameManager.ST.checkPoint)
+            {
+                GameManager.ST.checkPoint.isActive = true;
+                GameManager.ST.checkPoint.glow.SetActive(false);
+            }
+            GameManager.ST.NewCheckPoint(this);
+            Audio.ST.PlaySound(Sound.savepoint);
+            isActive = false;
             glow.SetActive(true);
         }
     }

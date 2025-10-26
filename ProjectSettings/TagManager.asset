@@ -15,12 +15,12 @@ TagManager:
   - Ground
   - Water
   - UI
-  - Units
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Player
+  - Limiter
+  - DamageDealer
+  - Enemies
+  - Legs
+  - Items
   - 
   - 
   - 

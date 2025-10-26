@@ -1,9 +1,14 @@
+using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class Health : MonoBehaviour
 {
+    public event Action healthChanged;
+    public event Action healthDamage;
+    public event Action isDead;
+    
+    [SerializeField] private bool isActive = true;
     [SerializeField] private int maxHealth;
     [SerializeField] private int currentHealth;
     private Animator animator;
@@ -14,24 +19,51 @@ public class Health : MonoBehaviour
     }
     private void Start()
     {
-        Containers.ST.healthContainer.Add(gameObject,this);
+        GameManager.ST.healthContainer.Add(gameObject,this);
         Resurrection();
     }
     public void TakeDamage(int dmg)
     {
+        if(!isActive) 
+            return;
         currentHealth -= dmg;
-        if (currentHealth < 0)
+        isActive = false;
+        healthDamage?.Invoke();
+        if (currentHealth <= 0)
+        {
             currentHealth = 0;
-        animator.Play("Hit");
+            animator.Play("Death");
+            isDead?.Invoke();
+        }
+        else
+        {
+            animator.Play("Hit");
+            StartCoroutine(HitCoolDown());
+        }
     }
     public void DoHeal(int hp)
     {
         currentHealth += hp;
         if (currentHealth > maxHealth)
             currentHealth = maxHealth;
+        healthChanged?.Invoke();
     }
     public void Resurrection()
     {
-        currentHealth = maxHealth;
+        isActive = true;
+        DoHeal(maxHealth);
+    }
+
+    public int CurrentHealth
+    {
+        get => currentHealth;
+    }
+    
+    private IEnumerator HitCoolDown ()
+    {
+        isActive = false;
+        yield return new WaitForSeconds(1.0f);
+        isActive = true;
+        yield return null;
     }
 }
