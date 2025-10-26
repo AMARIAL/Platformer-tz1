@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7929088890864449316}
   - component: {fileID: 399227240682594096}
-  - component: {fileID: 5323431984950214304}
+  - component: {fileID: 407266256303251573}
   m_Layer: 8
   m_Name: LimiterKiller
   m_TagString: Untagged
@@ -78,7 +78,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &5323431984950214304
+--- !u!114 &407266256303251573
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -87,6 +87,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 9128491597758266667}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9bb6cc3cfad091b40ae69e843ab653bc, type: 3}
+  m_Script: {fileID: 11500000, guid: eeed58759df03204da5268e25f39fa9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damage: 9999
+  otherHealthOwner: 1

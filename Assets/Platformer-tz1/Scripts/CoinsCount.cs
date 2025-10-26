@@ -17,7 +17,7 @@ public class CoinsCount : MonoBehaviour
 
     private void CounterUpdate()
     {
-        count.text = "x " + GameManager.ST.coins + "/"+CoinsManager.ST.allCoinsContainer.Count;
+        count.text = "x " + GameManager.ST.coins + " // "+CoinsManager.ST.allCoinsContainer.Count;
     }
 
 }
