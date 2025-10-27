@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-public class CoinsCount : MonoBehaviour
+public class CoinsCountUI : MonoBehaviour
 {
     private TextMeshProUGUI count;
 

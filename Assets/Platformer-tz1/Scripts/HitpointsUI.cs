@@ -21,6 +21,7 @@ public class HitpointsUI : MonoBehaviour
             lives = GetComponentInChildren<TextMeshProUGUI>();
             GameManager.ST.livesChanged += ChangeLives;
             ChangeHp();
+            ChangeLives();
         }
         else
         {

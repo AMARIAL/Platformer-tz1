@@ -21,17 +21,18 @@ public class GameManager : MonoBehaviour
     
     private void Awake()
     {
-        if (SceneManager.GetActiveScene().name.Contains('-'))
-            int.TryParse(SceneManager.GetActiveScene().name.Split('-')[1], out levelNum);
-        
         if (ST)
             Destroy(gameObject);
         else
+        {
             ST = this;
+        }
     }
-    
     private void Start()
     {
+        if (SceneManager.GetActiveScene().name.Contains('-'))
+            int.TryParse(SceneManager.GetActiveScene().name.Split('-')[1], out levelNum);
+
         if (levelNum == 0)
         {
             ChangeState(GameState.Pause);
@@ -46,7 +47,6 @@ public class GameManager : MonoBehaviour
             startPosition = Player.ST.transform.position;
         }
     }
-
     public void CoinsChanged(bool reCount)
     {
         if(!reCount)

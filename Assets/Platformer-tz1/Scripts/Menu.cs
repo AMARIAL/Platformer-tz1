@@ -102,21 +102,24 @@ public class Menu : MonoBehaviour
     public void ChangeLevel(int i)
     {
         Audio.ST.PlaySound(Sound.button);
-
+        
         if (i > 0 && i < SceneManager.sceneCountInBuildSettings)
         {
             GameManager.ST.ChangeState(GameState.Game);
             SceneManager.LoadScene("Level-"+i);
         }
         else
+        {
             SceneManager.LoadScene("Menu");
+        }
     }
 
     public void NextLevel()
     {
         int i = GameManager.ST.levelNum + 1;
-        if(SceneManager.sceneCountInBuildSettings > i)
+        if(SceneManager.sceneCountInBuildSettings >= i)
             ChangeLevel(i);
+        
     }
 
     private void CleanWindows(bool isWindows)

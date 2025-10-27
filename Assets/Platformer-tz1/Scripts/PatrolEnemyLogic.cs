@@ -1,6 +1,6 @@
 using System.Collections;
 using UnityEngine;
-public class Skeleton : MonoBehaviour, IEnemy
+public class PatrolEnemyLogic : MonoBehaviour, IEnemy
 
 {
     enum State
@@ -10,7 +10,7 @@ public class Skeleton : MonoBehaviour, IEnemy
         Attack,
         Dead
     }
-    [SerializeField] private bool isLookRight = true;
+    [SerializeField] public bool isLookRight = true;
     [SerializeField] private bool isCanMove;
     [SerializeField] private bool isAlive;
     [SerializeField] private float moveSpeed;
@@ -63,12 +63,12 @@ public class Skeleton : MonoBehaviour, IEnemy
             state = State.Idle;
         }
         
-        _animator.SetFloat("isSpeed", Mathf.Abs(_rigidbody2D.velocity.x));
+        _animator.SetFloat("Speed", Mathf.Abs(_rigidbody2D.velocity.x));
 
     }
     private void Update ()
     {
-        _animator.SetFloat("isSpeed", 0);
+        _animator.SetFloat("Speed", 0);
         
         if(state == State.Move)
             Move();
@@ -130,6 +130,10 @@ public class Skeleton : MonoBehaviour, IEnemy
     public void CanMove()
     {
         isCanMove = true;
+    }
+    public void CantMove()
+    {
+        isCanMove = false;
     }
     private void Flip ()
     {
