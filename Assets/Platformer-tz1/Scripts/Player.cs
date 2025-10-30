@@ -13,7 +13,7 @@ public class Player : MonoBehaviour
     [SerializeField] private bool isFalling;
     [SerializeField] private float jumpForce;
     public ParticleSystem particleJumpUpGround;
-    private Inputs _inputs;
+    [HideInInspector] public Inputs _inputs;
     private Rigidbody2D _rigidbody2D;
     private Animator _animator;
     private SpriteRenderer _spriteRenderer;
